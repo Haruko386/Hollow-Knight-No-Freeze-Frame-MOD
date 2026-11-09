@@ -36,64 +36,64 @@ namespace NoFreezeFrame
 
             entries.Add(Option(
                 "消除类型 0 冻结", "Remove preset 0",
-                "类型 0：约 0.35 秒的完全冻结，不含过渡时间。",
-                "Preset 0: a roughly 0.35-second full freeze, excluding transitions.",
+                "完全冻结约 0.35 秒，不含过渡。",
+                "Full freeze: 0.35 s, plus transitions.",
                 () => settings.RemovePreset0,
                 value => settings.RemovePreset0 = value));
 
             entries.Add(Option(
                 "消除类型 1 短冻结", "Remove preset 1",
-                "类型 1：敌人死亡、拉杆等可能触发的短暂冻结。",
-                "Preset 1: a brief freeze used by enemy deaths, levers, and other events.",
+                "敌人死亡、拉杆等触发的短暂停顿。",
+                "Brief freeze: enemy deaths, levers, etc.",
                 () => settings.RemovePreset1,
                 value => settings.RemovePreset1 = value));
 
             entries.Add(Option(
                 "消除类型 2 慢动作", "Remove preset 2",
-                "类型 2：以 15% 速度持续约 2 秒的慢动作，不含过渡时间。",
-                "Preset 2: roughly 2 seconds at 15% speed, excluding transitions.",
+                "15% 速度慢动作约 2 秒，不含过渡。",
+                "Slow motion: 15% speed for 2 s, plus transitions.",
                 () => settings.RemovePreset2,
                 value => settings.RemovePreset2 = value));
 
             entries.Add(Option(
                 "消除类型 3 冻结", "Remove preset 3",
-                "类型 3：约 0.25 秒的完全冻结；与类型 4、5 独立设置。",
-                "Preset 3: a roughly 0.25-second full freeze, controlled independently of 4 and 5.",
+                "完全冻结约 0.25 秒，不含过渡。",
+                "Full freeze: 0.25 s, plus transitions.",
                 () => settings.RemovePreset3,
                 value => settings.RemovePreset3 = value));
 
             entries.Add(Option(
                 "消除类型 4 冻结", "Remove preset 4",
-                "类型 4：约 0.25 秒的完全冻结；与类型 3、5 独立设置。",
-                "Preset 4: a roughly 0.25-second full freeze, controlled independently of 3 and 5.",
+                "完全冻结约 0.25 秒，不含过渡。",
+                "Full freeze: 0.25 s, plus transitions.",
                 () => settings.RemovePreset4,
                 value => settings.RemovePreset4 = value));
 
             entries.Add(Option(
                 "消除类型 5 冻结", "Remove preset 5",
-                "类型 5：约 0.25 秒的完全冻结；与类型 3、4 独立设置。",
-                "Preset 5: a roughly 0.25-second full freeze, controlled independently of 3 and 4.",
+                "完全冻结约 0.25 秒，不含过渡。",
+                "Full freeze: 0.25 s, plus transitions.",
                 () => settings.RemovePreset5,
                 value => settings.RemovePreset5 = value));
 
             entries.Add(Option(
                 "消除直接计时冻结", "Remove direct timed freezes",
-                "骑士受伤及其他直接计时冻结；不影响类型 0–5 预设。",
-                "Player damage and other direct timed freezes; does not control presets 0–5.",
+                "小骑士受伤及其他直接计时冻结。",
+                "Player damage and other direct freezes.",
                 () => settings.RemoveDirectTimed,
                 value => settings.RemoveDirectTimed = value));
 
             entries.Add(Option(
                 "消除布尔参数冻结", "Remove bool-overload freezes",
-                "通过布尔参数版本的冻结方法触发的停顿；场景取决于调用方。",
-                "Freezes requested through the bool overload; usage depends on the caller.",
+                "布尔参数冻结方法触发的停顿。",
+                "Freezes from the bool-parameter method.",
                 () => settings.RemoveLegacy,
                 value => settings.RemoveLegacy = value));
 
             entries.Add(Option(
                 "消除 GC 冻结", "Remove GC freezes",
-                "冻结与强制垃圾回收结合的特殊效果；开启时也会跳过该次强制回收。",
-                "Freezes with forced garbage collection; removal also skips that collection.",
+                "冻结伴随强制回收；关闭冻结也跳过回收。",
+                "GC freeze; removal also skips forced GC.",
                 () => settings.RemoveGc,
                 value => settings.RemoveGc = value));
 
