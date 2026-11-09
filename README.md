@@ -4,11 +4,17 @@ Removes global freeze frames and hitstop in **Hollow Knight 1.5.78.11833**. Requ
 
 ## Usage
 
-1. Download [v1.0.0](https://github.com/Haruko386/Hollow-Knight-No-Freeze-Frame-MOD/releases/tag/v1.0.0).
+1. Download [v1.0.1](https://github.com/Haruko386/Hollow-Knight-No-Freeze-Frame-MOD/releases/tag/v1.0.1).
 2. Extract the `NoFreezeFrame` folder into `hollow_knight_Data/Managed/Mods/`.
-3. Open **Options → Mods → No Freeze Frames** to enable or disable the mod. Changes apply when leaving the menu, and the setting is saved between sessions.
+3. Open **Options → Mods → No Freeze Frames** to enable the mod and choose which freezes to remove. The mod toggle applies when leaving the menu. Settings are saved between sessions.
 
-Enabled by default. Normal menu pause is preserved. To uninstall, close the game and remove the `NoFreezeFrame` folder.
+All removal options are enabled by default. Each option removes a freeze type when On and preserves it when Off:
+
+- **Presets 0–5** control the game's six numbered freeze presets. Different events may use the same preset.
+- **Direct timed freezes** include the player's damage freeze and other direct calls to the timed freeze method.
+- **Bool-overload freezes** and **GC freezes** control the corresponding freeze methods.
+
+Normal menu pause is preserved. Performance stutters and freezes implemented outside these methods are not covered. To uninstall, close the game and remove the `NoFreezeFrame` folder.
 
 ## Build
 
@@ -22,7 +28,7 @@ Requires the .NET SDK and a local game installation with Modding API installed.
 .\build.ps1 -GamePath 'D:\Games\Hollow Knight' -Install
 ```
 
-Output: `artifacts/NoFreezeFrame/NoFreezeFrame.dll` and `artifacts/NoFreezeFrame-1.0.0.zip`.
+Output: `artifacts/NoFreezeFrame/NoFreezeFrame.dll` and `artifacts/NoFreezeFrame-1.0.1.zip`.
 
 ## References
 
