@@ -1,12 +1,12 @@
-# v1.0.0 提交与发布指令
+# v1.0.0 Git and Release Commands
 
-以下记录本次按功能拆分提交的完整流程，供查看与复用。当前仓库发布完成后，不要再重复初始化、创建同名标签或同名 Release。
+This document records the original commit and release workflow, organized by feature. The release is already published; do not repeat initialization or recreate the existing tag or release.
 
-前置条件：Git、.NET SDK、GitHub CLI（`gh`），以及已安装 Modding API 的游戏。Git 与 GitHub CLI 需要已登录有仓库写入权限的账号。
+Requirements: Git, the .NET SDK, GitHub CLI (`gh`), and a local game installation with Modding API installed. Authenticate Git and GitHub CLI with an account that has write access to the repository.
 
-## 连接远程并保留初始历史
+## Connect to the Remote and Preserve Its History
 
-仅适用于本次开始时“本地尚无 `.git`、远程仅有初始 LICENSE”的状态：
+These commands apply only to the original setup: no local `.git` directory and a remote repository containing only the initial LICENSE commit.
 
 ```powershell
 Set-Location 'E:\Haruko386-UnOffical\HK-no-freeze-frame-mod'
@@ -17,31 +17,31 @@ git reset --mixed origin/main
 git restore --source origin/main --worktree -- LICENSE
 ```
 
-## 按功能提交
+## Commit by Feature
 
 ```powershell
-# 项目配置：目标框架、游戏程序集引用、忽略本地构建与反编译文件
+# Project setup: target framework, game references, and ignored local artifacts
 git add .gitignore src/NoFreezeFrame/NoFreezeFrame.csproj
 git commit -m "chore(project): configure Hollow Knight 1.5.78 mod project"
 
-# feat 1：四个全局冻结入口、关闭恢复、重复初始化保护
+# Feature 1: block four freeze entry points, restore on disable, and guard repeated initialization
 git add src/NoFreezeFrame/NoFreezeFrame.cs
 git commit -m "feat(hitstop): block all global freeze entry points"
 
-# feat 2：中英文设置菜单、API 管理开关与持久化
+# Feature 2: English/Chinese menus with an API-managed persistent toggle
 git add src/NoFreezeFrame/NoFreezeFrame.Menu.cs
 git commit -m "feat(menu): add localized persistent freeze toggle"
 
-# 安装说明、适用范围、验证状态与发布记录
+# Installation, scope, validation status, and release documentation
 git add README.md docs/releases/v1.0.0.md docs/GIT-COMMANDS.md
 git commit -m "docs: document installation and v1.0.0 release"
 
-# 构建、ZIP 打包与可选安装
+# Build, ZIP packaging, and optional installation
 git add build.ps1
 git commit -m "build: add release packaging and installation script"
 ```
 
-## 构建、推送、打标签、发布
+## Build, Push, Tag, and Publish
 
 ```powershell
 .\build.ps1
@@ -70,4 +70,4 @@ git ls-remote origin refs/heads/main refs/tags/v1.0.0 'refs/tags/v1.0.0^{}'
 git status --short
 ```
 
-`--verify-tag` 要求远程标签已经存在，避免 GitHub 隐式选取别的提交。发布包只包含本模组 DLL、使用说明及许可证；游戏 DLL、本地工具、反编译资料与测试缓存均不上传到 Git。
+`--verify-tag` requires the remote tag to exist, preventing GitHub from implicitly selecting another commit. The release archive contains only the mod DLL, README, and license. Game DLLs, local tools, decompiled files, and test caches are excluded from Git.
