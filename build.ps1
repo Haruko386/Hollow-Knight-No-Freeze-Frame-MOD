@@ -14,7 +14,7 @@ $dll = Join-Path $PSScriptRoot 'src\NoFreezeFrame\bin\Release\net472\NoFreezeFra
 Copy-Item -LiteralPath $dll -Destination $package -Force
 Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'README.md') -Destination $package -Force
 Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'LICENSE') -Destination $package -Force
-Compress-Archive -LiteralPath $package -DestinationPath (Join-Path $PSScriptRoot 'artifacts\NoFreezeFrame-1.0.0.zip') -Force
+Compress-Archive -LiteralPath $package -DestinationPath (Join-Path $PSScriptRoot 'artifacts\NoFreezeFrame-1.0.1.zip') -Force
 
 if ($Install) {
     if (Get-Process -Name hollow_knight -ErrorAction SilentlyContinue) {
@@ -27,4 +27,4 @@ if ($Install) {
     Copy-Item -LiteralPath $dll -Destination $destination -Force
     Write-Output "Installed: $destination\NoFreezeFrame.dll"
 }
-Write-Output "Package: $PSScriptRoot\artifacts\NoFreezeFrame-1.0.0.zip"
+Write-Output "Package: $PSScriptRoot\artifacts\NoFreezeFrame-1.0.1.zip"
