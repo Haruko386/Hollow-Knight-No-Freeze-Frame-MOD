@@ -4,7 +4,7 @@
     <LangVersion>latest</LangVersion>
     <AssemblyName>NoFreezeFrame</AssemblyName>
     <RootNamespace>NoFreezeFrame</RootNamespace>
-    <Version>1.0.0</Version>
+    <Version>1.0.1</Version>
     <Description>Disable Hollow Knight 1.5.78 global freeze frames.</Description>
     <GamePath Condition="'$(GamePath)' == ''">E:\SteamLibrary\steamapps\common\Hollow Knight</GamePath>
     <ManagedPath>$(GamePath)\hollow_knight_Data\Managed</ManagedPath>

@@ -3,13 +3,16 @@ using Modding;
 
 namespace NoFreezeFrame
 {
-    public sealed partial class NoFreezeFrame : Mod, ITogglableMod
+    public sealed partial class NoFreezeFrame : Mod, ITogglableMod, IGlobalSettings<FreezeSettings>
     {
         private bool hooksInstalled;
 
+        private FreezeSettings settings = new FreezeSettings();
+        private int presetDispatchDepth;
+
         public NoFreezeFrame() : base("NoFreezeFrame") { }
 
-        public override string GetVersion() => "1.0.0";
+        public override string GetVersion() => "1.0.1";
 
         public override void Initialize()
         {
@@ -25,7 +28,7 @@ namespace NoFreezeFrame
                 On.GameManager.FreezeMoment_float_float_float_bool += SkipLegacy;
                 On.GameManager.FreezeMomentGC += SkipWithGc;
                 hooksInstalled = true;
-                Log("Enabled: all four GameManager freeze entry points are blocked.");
+                Log("Enabled: freeze filters installed.");
             }
             catch
             {
@@ -52,31 +55,52 @@ namespace NoFreezeFrame
             On.GameManager.FreezeMomentGC -= SkipWithGc;
         }
 
-        private static void SkipPreset(On.GameManager.orig_FreezeMoment_int orig, GameManager self, int type)
+        public void OnLoadGlobal(FreezeSettings loaded)
         {
-            // Do not start a coroutine, change timeSlowedCount, or write the global time scale.
+            settings = loaded ?? new FreezeSettings();
         }
 
-        private static IEnumerator SkipTimed(
-            On.GameManager.orig_FreezeMoment_float_float_float_float orig, GameManager self,
-            float rampDownTime, float waitTime, float rampUpTime, float targetSpeed)
+        public FreezeSettings OnSaveGlobal()
         {
-            return CompletedCoroutine.Instance;
+            return settings;
         }
 
-        private static IEnumerator SkipLegacy(
-            On.GameManager.orig_FreezeMoment_float_float_float_bool orig, GameManager self,
-            float rampDownTime, float waitTime, float rampUpTime, bool runGc)
+        private void SkipPreset(On.GameManager.orig_FreezeMoment_int orig, GameManager self, int type)
         {
-            return CompletedCoroutine.Instance;
+            if (settings.ShouldRemovePreset(type)) return;
+
+            presetDispatchDepth++;
+
+            try
+            {
+                orig(self, type);
+            }
+            finally
+            {
+                presetDispatchDepth--;
+            }
         }
 
-        private static IEnumerator SkipWithGc(
-            On.GameManager.orig_FreezeMomentGC orig, GameManager self,
-            float rampDownTime, float waitTime, float rampUpTime, float targetSpeed)
+        private IEnumerator SkipLegacy(On.GameManager.orig_FreezeMoment_float_float_float_bool orig, GameManager self, float rampDownTime, float waitTime, float rampUpTime, bool runGc)
         {
-            // The freeze-specific forced collection is skipped as well; normal GC is untouched.
-            return CompletedCoroutine.Instance;
+            if (presetDispatchDepth == 0 && settings.RemoveLegacy) return CompletedCoroutine.Instance;
+
+            return orig(self, rampDownTime, waitTime, rampUpTime, runGc);
+        }
+
+        private IEnumerator SkipWithGc(On.GameManager.orig_FreezeMomentGC orig, GameManager self, float rampDownTime, float waitTime, float rampUpTime, float targetSpeed)
+        {
+            if (presetDispatchDepth == 0 && settings.RemoveGc)
+                return CompletedCoroutine.Instance;
+
+            return orig(self, rampDownTime, waitTime, rampUpTime, targetSpeed);
+        }
+
+        private IEnumerator SkipTimed(On.GameManager.orig_FreezeMoment_float_float_float_float orig, GameManager self, float rampDownTime, float waitTime, float rampUpTime, float targetSpeed)
+        {
+            if (presetDispatchDepth == 0 && settings.RemoveDirectTimed) return CompletedCoroutine.Instance;
+
+            return orig(self, rampDownTime, waitTime, rampUpTime, targetSpeed);
         }
 
         // Stateless and reusable, with no yields and no per-hit allocation. Never return null:
